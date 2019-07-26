@@ -2803,6 +2803,7 @@ class BrailleSettingsSubPanel(DriverSettingsMixin, SettingsPanel):
 	def onNoMessageTimeoutChange(self, evt):
 		self.messageTimeoutEdit.Enable(not evt.IsChecked())
 
+
 class VisionSettingsPanel(SettingsPanel):
 	# Translators: This is the label for the vision panel
 	title = _("Vision")
@@ -2816,7 +2817,8 @@ class VisionSettingsPanel(SettingsPanel):
 		providerLabelText = _("&Vision enhancement providers")
 
 		providersBox = wx.StaticBox(self, label=providerLabelText)
-		providersGroupDescription = _("Providers are activated and deactivated as soon as you check or uncheck check boxes.")
+		providersGroupDescription = _(
+			"Providers are activated and deactivated as soon as you check or uncheck check boxes.")
 		providersGroup = guiHelper.BoxSizerHelper(self, sizer=wx.StaticBoxSizer(providersBox, wx.HORIZONTAL))
 		providersGroup.addItem(wx.StaticText(self, label=providersGroupDescription))
 		self.providerList = providersGroup.addLabeledControl(
@@ -2830,7 +2832,7 @@ class VisionSettingsPanel(SettingsPanel):
 
 		settingsSizerHelper.addItem(providersGroup)
 
-		self.providerPanelsSizer=wx.BoxSizer(wx.VERTICAL)
+		self.providerPanelsSizer = wx.BoxSizer(wx.VERTICAL)
 		settingsSizerHelper.addItem(self.providerPanelsSizer)
 
 	def initializeEnhancementProviderList(self):
@@ -2838,7 +2840,7 @@ class VisionSettingsPanel(SettingsPanel):
 		self.providerNames = [provider[0] for provider in providerList]
 		providerChoices = [provider[1] for provider in providerList]
 		self.providerList.Clear()
-		self.providerList.Items=providerChoices
+		self.providerList.Items = providerChoices
 		self.syncProviderCheckboxes()
 		self.providerList.Select(0)
 
@@ -2858,7 +2860,11 @@ class VisionSettingsPanel(SettingsPanel):
 			# Translators: This message is presented when
 			# NVDA is unable to load selected
 			# vision enhancement provider.
-			gui.messageBox(_("Could not load the %s vision enhancement provider.")%providerName, _("Vision Enhancement Provider Error"), wx.OK|wx.ICON_WARNING, self)
+			gui.messageBox(
+				_(f"Could not load the {providerName} vision enhancement provider."),
+				_("Vision Enhancement Provider Error"),
+				wx.OK | wx.ICON_WARNING,
+				self)
 			self.providerList.Check(index, False)
 			return 
 		evt.Skip()
@@ -2875,7 +2881,9 @@ class VisionSettingsPanel(SettingsPanel):
 		self.providerPanelsSizer.Clear(delete_windows=True)
 		self.providerPanelInstances[:] = []
 		for name, providerInst in sorted(vision.handler.providers.items()):
-			if providerInst.guiPanelClass and (providerInst.guiPanelClass is not VisionProviderSubPanel or providerInst.supportedSettings):
+			if providerInst.guiPanelClass and (
+				providerInst.guiPanelClass is not VisionProviderSubPanel or providerInst.supportedSettings
+			):
 				if len(self.providerPanelInstances) > 0:
 					self.providerPanelsSizer.AddSpacer(guiHelper.SPACE_BETWEEN_VERTICAL_DIALOG_ITEMS)
 				panelSizer = wx.StaticBoxSizer(wx.StaticBox(self, label=providerInst.description), wx.VERTICAL)
@@ -2906,12 +2914,18 @@ class VisionSettingsPanel(SettingsPanel):
 			# Translators: This message is presented when
 			# NVDA is unable to load certain
 			# vision enhancement providers.
-			gui.messageBox(_("Could not load the following vision enhancement providers: %s") % ", ".join(initErrors), _("Vision Enhancement Provider Error"), wx.OK|wx.ICON_WARNING, self)
+			initErrorsList = ", ".join(initErrors)
+			gui.messageBox(
+				_(f"Could not load the following vision enhancement providers: {initErrorsList}"),
+				_("Vision Enhancement Provider Error"),
+				wx.OK | wx.ICON_WARNING,
+				self)
 
 	def onSave(self):
 		for panel in self.providerPanelInstances:
 			panel.onSave()
 		self.configuredProviders = config.conf['vision']['providers'][:]
+
 
 class VisionProviderSubPanel(DriverSettingsMixin, SettingsPanel):
 
@@ -2919,8 +2933,7 @@ class VisionProviderSubPanel(DriverSettingsMixin, SettingsPanel):
 		self,
 		parent: wx.Window,
 		*,
-		providerCallable: Callable[[], vision.providerBase.VisionEnhancementProvider]
-	):
+		providerCallable: Callable[[], vision.providerBase.VisionEnhancementProvider]):
 		"""
 		@param providerCallable: A callable that returns an instance to a VisionEnhancementProvider.
 			This will usually be a weakref, but could be any callable taking no arguments.
@@ -2935,6 +2948,7 @@ class VisionProviderSubPanel(DriverSettingsMixin, SettingsPanel):
 	def makeSettings(self, settingsSizer):
 		# Construct vision enhancement provider settings
 		self.updateDriverSettings()
+
 
 """ The name of the config profile currently being edited, if any.
 This is set when the currently edited configuration profile is determined and returned to None when the dialog is destroyed.
