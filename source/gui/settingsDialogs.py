@@ -2857,10 +2857,10 @@ class VisionSettingsPanel(SettingsPanel):
 		if not isChecked:
 			vision.handler.terminateProvider(providerName)
 		elif not vision.handler.initializeProvider(providerName):
-			# Translators: This message is presented when
-			# NVDA is unable to load selected
-			# vision enhancement provider.
 			gui.messageBox(
+				# Translators: This message is presented when
+				# NVDA is unable to load just checked
+				# vision enhancement provider.
 				_(f"Could not load the {providerName} vision enhancement provider."),
 				_("Vision Enhancement Provider Error"),
 				wx.OK | wx.ICON_WARNING,
@@ -2916,6 +2916,8 @@ class VisionSettingsPanel(SettingsPanel):
 			# vision enhancement providers.
 			initErrorsList = ", ".join(initErrors)
 			gui.messageBox(
+				# Translators: This message is presented when
+				# NVDA is unable to load vision enhancement providers after discarding settings.
 				_(f"Could not load the following vision enhancement providers: {initErrorsList}"),
 				_("Vision Enhancement Provider Error"),
 				wx.OK | wx.ICON_WARNING,
